@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PDF Viewer</title>
+        <style>
+            /* body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #F0F0F0;
+                overflow: hidden;
+            } */
+            #videoContainer {
+                width: 70%;
+                height: 100vh;
+                margin: 0 auto;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                /* border-left: 2px solid black; */
+                overflow-y: auto;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            #pdfViewer {
+                width: 100%;
+                height: 100%;
+                border: none;
+                display: none;
+            }
+            /* #sidePanel {
+                width: 30%;
+                height: 100vh;
+                position: fixed;
+                top: 0;
+                left: 0;
+                background-color: #e0dfdf;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            } */
+            #label {
+                font-size: 24px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 30px;
+            }
+            /* #videoInput {
+                padding: 10px 20px;
+                background-color: #007BFF;
+                color: #FFF;
+                font-weight: bold;
+                cursor: pointer;
+                border: none;
+                margin-bottom: 20px;
+            } */
+        </style>
+    </head>
+    <body>
+        <div id="sidePanel">
+            <h1>Video Player</h1>
+            <input type="file" id="videoInput" accept="video/*" />
+        </div>
+        <div id="videoContainer">
+            <video id="videoPlayer" width="1000px" controls autofocus></video>
+        </div>
+
+        <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+        <script>
+
+            const videoInput = document.getElementById('videoInput');
+                const videoPlayer = document.getElementById('videoPlayer');
+                const videoContainer = document.getElementById('videoContainer');
+                let modifierKeyIsPressed = false;
+
+                videoInput.addEventListener('change', (event) => {
+                  const file = event.target.files[0];
+                  if (file) {
+                    const objectURL = URL.createObjectURL(file);
+                    videoPlayer.src = objectURL;
+                    videoPlayer.play();
+                    videoContainer.style.display = 'flex'; // Set display property to flex
+                    videoContainer.style.justifyContent = 'center'; // Center content horizontally
+                    videoContainer.style.alignItems = 'center'; // Center content vertically
+                    videoContainer.appendChild(videoContainer);
+
+                    videoPlayer.addEventListener('loadeddata', () => {
+                      videoPlayer.focus();
+                      videoInput.blur();
+                    });
+                  } else {
+                    videoPlayer.src = '';
+                    videoContainer.style.display = 'none';
+                  }
+                });
+
+
+
+
+                // snapshot
+
+                document.onkeydown = function(evt){
+                    console.log(evt.keyCode);
+                        if (evt.key === "Meta") {
+                        console.log("meta")
+                    }
+                }
+
+                function toggleOverlay() {
+                                    const overlay = document.querySelector('.overlay');
+
+                                    if (overlay) {
+                                        overlay.parentNode.removeChild(overlay);
+                                    } else {
+                                        const overlay = document.createElement('div');
+                                        overlay.classList.add('overlay'); // Add a class name to identify the overlay element
+                                        overlay.style.position = 'fixed';
+                                        overlay.style.top = '0';
+                                        overlay.style.left = '0';
+                                        overlay.style.width = '100%';
+                                        overlay.style.height = '100%';
+                                        overlay.style.background = 'rgba(0,0,0,0.8)';
+                                        overlay.style.backdropFilter = "saturate(180%) blur(6px)";
+                                        overlay.style.opacity = '1';
+                                        overlay.style.zIndex = '9999';
+
+                                        const message = document.createElement('div');
+                                        message.innerText = 'Screenshot is Disabled';
+                                        message.style.fontWeight = 'bolder';
+                                        message.style.color= "white";
+                                        message.style.position = 'absolute';
+                                        message.style.top = '50%';
+                                        message.style.left = '50%';
+                                        message.style.transform = 'translate(-50%, -50%)';
+                                        message.style.textAlign = 'center';
+                                        message.style.fontSize = '64px';
+                                        message.style.zIndex = '10000';
+
+                                        overlay.appendChild(message);
+
+                                        document.body.appendChild(overlay);
+                                    }
+                                }
+
+                                window.addEventListener('focus', toggleOverlay);
+                                window.addEventListener('blur', toggleOverlay);
+
+                                window.addEventListener('keyup', (event) => {
+                                if (event.keyCode === 44) {
+                                    toggleOverlay();
+                                }
+                                });
+
+                                window.addEventListener('keydown', (event) => {
+                                if (event.key === 'Meta') {
+                                    toggleOverlay();
+                                }
+                            });
+        </script>
+    </body>
+</html>

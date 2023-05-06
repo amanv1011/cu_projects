@@ -1,0 +1,11 @@
+.dom_manage_headth,
+td {
+  padding: 10px;
+}
+
+table,
+th,
+td {
+  border: 1px solid rgb(255, 255, 255);
+  border-collapse: collapse;
+}
